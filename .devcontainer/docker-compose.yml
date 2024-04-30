@@ -6,11 +6,12 @@ services:
     volumes:
       - ..:/home/build/app:cached
     environment:
-      - POSTGRES_HOST=localhost
+      - POSTGRES_HOST=postgres
       - NODE_ENV=dev
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_PORT=5432
       - API_PORT=3000
       - MAKER_PORT=4200
       - STORE_PORT=4201
@@ -18,6 +19,11 @@ services:
     depends_on:
       - postgres
       - pgadmin
+    links:
+      - postgres
+      - pgadmin
+    networks:
+      - postgres
 
   postgres:
     image: postgres:16
@@ -36,7 +42,9 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+      - POSTGRES_DATABASE=postgres
+    networks:
+      - postgres
 
   pgadmin:
     image: dpage/pgadmin4
@@ -44,13 +52,23 @@ services:
     restart: always
     ports:
       - '8888:80'
+    expose:
+      - 8888
     environment:
       PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
       PGADMIN_DEFAULT_PASSWORD: strong-password
     volumes:
-      - pgadmin-data:/var/lib/pgadmin5
+      - pgadmin-data:/var/lib/pgadmin4
     depends_on:
       - postgres
+    links:
+      - postgres
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
 
 volumes:
   postgres-data:

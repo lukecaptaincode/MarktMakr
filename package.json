@@ -6,14 +6,15 @@
     "start:api": "nx serve api",
     "start:maker": "nx serve maker",
     "start:store": "nx serve store",
-    "start:all": "nx run-many --target=serve --projects=api,maker,store",
+    "all": "nx run-many --target=serve --projects=api,maker,store",
     "typeorm": "typeorm-ts-node-commonjs -d ./ormconfig.ts",
-    "migration:generate": "npm run typeorm migration:generate",
-    "migration:show": "npm run typeorm migration:show",
-    "migration:run": "npm run typeorm migration:run",
-    "migration:revert": "npm run typeorm migration:revert",
-    "migration:create": "typeorm-ts-node-commonjs migration:create"
-    
+    "migration:generate": "npm run typeorm -- migration:generate ./apps/api/src/migrations/$npm_config_name",
+    "migration:show": "npm run typeorm -- migration:show",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "migration:create": "npm run typeorm -- migration:create ./apps/api/src/migrations/$npm_config_name",
+    "entity:create": "npm run typeorm -- entity:create ./apps/api/src/model/$npm_config_name"
+  
   },
   "private": true,
   "dependencies": {
